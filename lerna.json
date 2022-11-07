@@ -1,0 +1,16 @@
+{
+  "version": "independent",
+  "useWorkspaces": true,
+  "command": {
+    "publish": {
+      "removePackageFields": ["devDependencies", "scripts"]
+    },
+    "version": {
+      "allowBranch": "main",
+      "conventionalCommits": true,
+      "syncWorkspaceLock": true,
+      "message": "chore: release packages"
+    }
+  },
+  "ignoreChanges": ["**/cypress/**", "**/*.md"]
+}

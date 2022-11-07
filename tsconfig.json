@@ -1,0 +1,10 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["./packages/*/src/"]
+    }
+  },
+  "include": ["./packages/*/src/", "./packages/*/cypress/"]
+}

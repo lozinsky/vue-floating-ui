@@ -1,0 +1,50 @@
+name: Release and publish
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  release-and-publish:
+    if: github.event.pull_request.merged == true
+    name: Release and publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          registry-url: https://registry.npmjs.org
+
+      - name: Store cache path
+        run: echo 'cache_path=$(npm config get cache)' >> $GITHUB_ENV
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.cache_path }}
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run code build
+        run: npm run build --workspaces
+
+      - name: Release and publish
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          npx lerna publish --create-release github --yes
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
