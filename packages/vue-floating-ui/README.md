@@ -192,3 +192,9 @@ onMounted(() => {
   </div>
 </template>
 ```
+
+## Examples
+
+> These are just examples. The component APIs are not designed perfectly, but you can use them as a starting point for your own components and design the API however you like.
+
+- [Tooltip](https://codesandbox.io/p/sandbox/vue-floating-ui-tooltip-8718xk?file=/src/components/Tooltip.vue)
