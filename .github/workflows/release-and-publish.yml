@@ -1,15 +1,10 @@
 name: Release and publish
 
 on:
-  pull_request:
-    types:
-      - closed
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   release-and-publish:
-    if: github.event.pull_request.merged == true
     name: Release and publish
     runs-on: ubuntu-latest
     steps:
