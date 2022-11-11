@@ -5,6 +5,8 @@ on:
     types:
       - opened
       - synchronize
+    paths-ignore:
+      - '**.md'
 
 jobs:
   lint:
