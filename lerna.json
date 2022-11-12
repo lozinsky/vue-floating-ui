@@ -9,6 +9,7 @@
       "allowBranch": "main",
       "conventionalCommits": true,
       "syncWorkspaceLock": true,
+      "changelogPreset": "conventionalcommits",
       "message": "chore: release packages"
     }
   },
