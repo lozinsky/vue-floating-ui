@@ -255,7 +255,7 @@ describe('useFloating', () => {
     const cleanup = cy.spy();
     const { UseFloating } = setup({ whileElementsMounted: () => cleanup });
 
-    cy.mount(UseFloating).then((wrapper) => {
+    cy.mount(UseFloating).then(({ wrapper }) => {
       wrapper.unmount();
 
       cy.wrap(cleanup).should('have.callCount', 1);
@@ -266,7 +266,7 @@ describe('useFloating', () => {
     const cleanup = cy.spy();
     const { UseFloating } = setup({ whileElementsMounted: () => cleanup });
 
-    cy.mount(UseFloating).then((wrapper) => {
+    cy.mount(UseFloating).then(({ wrapper }) => {
       wrapper.getCurrentComponent().scope.stop();
 
       cy.wrap(cleanup).should('have.callCount', 1);
@@ -296,14 +296,14 @@ describe('useFloating', () => {
   it('updates floating when `update` function is called', () => {
     const { UseFloating } = setup();
 
-    cy.mount(UseFloating).then((wrapper) => {
+    cy.mount(UseFloating).then(({ wrapper, component }) => {
       wrapper.element.setAttribute('style', 'margin-top: 50px');
 
       cy.dataCy('floating')
         .should('have.css', 'top', '58px')
         .should('have.css', 'left', '8px')
         .then(() => {
-          wrapper.vm.update();
+          component.update();
 
           cy.dataCy('floating').should('have.css', 'top', '100px').should('have.css', 'left', '8px');
         });
@@ -315,8 +315,8 @@ describe('useFloating', () => {
 
     reference.isVisible = false;
 
-    cy.mount(UseFloating).then((wrapper) => {
-      wrapper.vm.reference = {
+    cy.mount(UseFloating).then(({ component }) => {
+      component.reference = {
         getBoundingClientRect() {
           return {
             x: 8,
