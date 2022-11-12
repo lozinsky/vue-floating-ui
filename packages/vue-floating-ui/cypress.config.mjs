@@ -2,6 +2,7 @@ import { defineConfig } from 'cypress';
 import { searchForWorkspaceRoot } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import vueJsx from '@vitejs/plugin-vue-jsx';
+import checker from 'vite-plugin-checker';
 
 const workspaceRoot = searchForWorkspaceRoot(process.cwd());
 
@@ -14,7 +15,7 @@ export default defineConfig({
         server: {
           fs: { allow: [workspaceRoot] },
         },
-        plugins: [tsconfigPaths({ root: workspaceRoot }), vueJsx()],
+        plugins: [tsconfigPaths({ root: workspaceRoot }), vueJsx(), checker({ typescript: true })],
       },
     },
   },
