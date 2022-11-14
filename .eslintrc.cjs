@@ -16,7 +16,7 @@ module.exports = {
   ignorePatterns: ['dist/', '.*rc.cjs', '*.config.mjs'],
   overrides: [
     {
-      files: ['**/cypress/**/*.{ts,tsx}'],
+      files: ['**/cypress/**/*.ts'],
       rules: {
         '@typescript-eslint/no-namespace': 'off',
 

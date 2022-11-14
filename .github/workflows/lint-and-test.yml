@@ -1,6 +1,9 @@
 name: Lint and test
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     types:
       - opened
@@ -37,8 +40,16 @@ jobs:
         run: npm run lint
 
   test:
-    name: Test
+    name: Test with Vue ${{ matrix.vue-version }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        vue-version: [3, 2.7]
+        include:
+          - vue-version: 3
+            vue-package: vue
+          - vue-version: 2.7
+            vue-package: vue2.7
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -59,6 +70,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Setup Vue
+        run: npx vue-demi-switch ${{ matrix.vue-version }} ${{ matrix.vue-package }}
 
       - name: Run code test
         run: npm test --workspaces
