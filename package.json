@@ -4,7 +4,7 @@
     "./packages/*"
   ],
   "scripts": {
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "eslint .",
     "postinstall": "husky install"
   },
   "devDependencies": {
