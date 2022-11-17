@@ -22,6 +22,8 @@ export type ArrowOptions = {
 /**
  * Positions an inner element of the floating element such that it is centered to the reference element.
  *
+ * @param options The arrow options.
+ *
  * @see https://github.com/lozinsky/vue-floating-ui/blob/main/packages/vue-floating-ui/README.md#arrow
  */
 export function arrow(options: ArrowOptions): Middleware {
@@ -31,7 +33,7 @@ export function arrow(options: ArrowOptions): Middleware {
     fn(args) {
       const element = unwrapElement(unref(options.element));
 
-      if (element === null) {
+      if (element == null) {
         return {};
       }
 

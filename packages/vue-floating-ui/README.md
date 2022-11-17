@@ -10,14 +10,17 @@ npm install vue-floating-ui
 
 ## Usage
 
-`useFloating()` wraps `computePosition()` and accepts all of its [options](https://floating-ui.com/docs/computeposition#options). The most basic usage is the following:
+`useFloating` wraps `computePosition` and accepts all of its [options](https://floating-ui.com/docs/computeposition#options). The most basic usage is the following:
 
 <!-- prettier-ignore -->
 ```html
 <script setup>
+import { ref } from 'vue';
 import { useFloating } from 'vue-floating-ui';
 
-const { x, y, reference, floating, strategy } = useFloating();
+const reference = ref(null);
+const floating = ref(null);
+const { x, y, strategy } = useFloating(reference, floating);
 </script>
 
 <template>
@@ -39,7 +42,6 @@ const { x, y, reference, floating, strategy } = useFloating();
 This will position the floating `Tooltip` element at the **bottom center** of the `Button` element by default.
 
 - `x` and `y` are `Ref` objects that contain the positioning coordinates. These values are `null` initially.
-- `reference` and `floating` are [template refs](https://vuejs.org/guide/essentials/template-refs.html).
 - `strategy` is a `Ref` object with a string value, `'absolute'` (default) or `'fixed'`.
 
 > To understand the fallback `?? 0` values, and the `'max-content'` width, visit [Initial layout](https://floating-ui.com/docs/computePosition#initial-layout).
@@ -49,25 +51,52 @@ This will position the floating `Tooltip` element at the **bottom center** of th
 View the [`computePosition` options](https://floating-ui.com/docs/computePosition#options). Example:
 
 ```js
+import { ref } from 'vue';
 import { flip, offset, shift, useFloating } from 'vue-floating-ui';
 
-useFloating({
+const reference = ref(null);
+const floating = ref(null);
+
+useFloating(reference, floating, {
   placement: 'right',
   strategy: 'fixed',
   middleware: [offset(10), flip(), shift()],
 });
 ```
 
+The `useFloating` composable also supports `Ref` options:
+
+```js
+import { ref } from 'vue';
+import { flip, offset, shift, useFloating } from 'vue-floating-ui';
+
+const reference = ref(null);
+const floating = ref(null);
+const placement = ref('right');
+const strategy = ref('fixed');
+const middleware = ref([offset(10), flip(), shift()]);
+
+useFloating(reference, floating, {
+  placement,
+  strategy,
+  middleware,
+});
+```
+
 ## Updating
 
-`useFloating()` only calculates the position **once** on render, or when the reference/floating elements changed — for example, the floating element gets mounted via conditional rendering.
+`useFloating` only calculates the position **once** on render, or when the reference/floating elements changed — for example, the floating element gets mounted via conditional rendering.
 
 To ensure the floating element remains anchored to its reference element while scrolling or resizing, pass the [`autoUpdate`](https://floating-ui.com/docs/autoUpdate) utility to the `whileElementsMounted` option:
 
 ```js
+import { ref } from 'vue';
 import { autoUpdate, useFloating } from 'vue-floating-ui';
 
-useFloating({
+const reference = ref(null);
+const floating = ref(null);
+
+useFloating(reference, floating, {
   // default
   whileElementsMounted: autoUpdate,
 
@@ -83,25 +112,28 @@ useFloating({
 
 `whileElementsMounted` is a fully reactive callback option to handle mounting/unmounting of the elements, which can be useful for other use cases.
 
-Alternatively (or additionally), you may want to update manually in some cases. The composable returns an `update()` function to update the position at will:
+Alternatively (or additionally), you may want to update manually in some cases. The composable returns an `update` function to update the position at will:
 
 ```js
-const { update } = useFloating();
+const { update } = useFloating(reference, floating);
 ```
 
 ## Custom components
 
-The `reference` and `floating` are template refs that can accept custom component refs too.
+Custom component template refs can be passed too:
 
 <!-- prettier-ignore -->
 ```html
 <script setup>
+import { ref } from 'vue';
 import { useFloating } from 'vue-floating-ui';
 
 import MyButton from './MyButton.vue';
 import MyTooltip from './MyTooltip.vue';
 
-const { x, y, reference, floating, strategy } = useFloating();
+const reference = ref(null);
+const floating = ref(null);
+const { x, y, strategy } = useFloating(reference, floating);
 </script>
 
 <template>
@@ -120,11 +152,13 @@ A template ref can be passed as the `element`:
 import { computed, ref } from 'vue';
 import { arrow, useFloating } from 'vue-floating-ui';
 
-const arrowElement = ref(null);
-const { x, y, reference, floating, middlewareData } = useFloating({
-  middleware: [arrow({ element: arrowElement })],
+const reference = ref(null);
+const floating = ref(null);
+const floatingArrow = ref(null);
+const { x, y, middlewareData } = useFloating(reference, floating, {
+  middleware: [arrow({ element: floatingArrow })],
 });
-const arrowPosition = computed(() => ({
+const floatingArrowPosition = computed(() => ({
   x: middlewareData.value.arrow?.x ?? null,
   y: middlewareData.value.arrow?.y ?? null,
 }));
@@ -134,7 +168,7 @@ const arrowPosition = computed(() => ({
   <button type="button" ref="reference">Button</button>
   <div ref="floating">
     Tooltip
-    <div ref="arrowElement" />
+    <div ref="floatingArrow" />
   </div>
 </template>
 ```
@@ -143,25 +177,27 @@ const arrowPosition = computed(() => ({
 
 In the tutorial, it shows you how to [style the arrow](https://floating-ui.com/docs/tutorial#arrow-middleware).
 
-This styling relies on the **final** (or resultant) placement, which can be different from the preferred one you passed as an option to `useFloating()` (if you're using `flip()` or `autoPlacement()` middleware).
+This styling relies on the **final** (or resultant) placement, which can be different from the preferred one you passed as an option to `useFloating` (if you're using `flip` or `autoPlacement` middleware).
 
 This final placement gets returned from the composable to enable the static side position style:
 
 ```js
-const { placement } = useFloating();
+const { placement } = useFloating(reference, floating);
 ```
 
 ## Virtual Element
 
-See [Virtual Elements](https://floating-ui.com/docs/virtual-elements) for details.
+See [Virtual Elements](https://floating-ui.com/docs/virtual-elements) for details. Example:
 
 <!-- prettier-ignore -->
 ```html
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useFloating } from 'vue-floating-ui';
 
-const { x, y, reference, floating, strategy } = useFloating();
+const reference = ref(null);
+const floating = ref(null);
+const { x, y, strategy } = useFloating(reference, floating);
 
 onMounted(() => {
   /**

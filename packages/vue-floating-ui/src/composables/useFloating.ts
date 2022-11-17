@@ -49,7 +49,7 @@ export type UseFloatingOptions<T extends ReferenceElement = ReferenceElement> = 
   whileElementsMounted?: (reference: T, floating: FloatingElement, update: () => void) => void | (() => void);
 };
 
-export type UseFloatingReturn<T extends ReferenceElement = ReferenceElement> = {
+export type UseFloatingReturn = {
   /**
    * The x-coord of the floating element.
    */
@@ -71,14 +71,6 @@ export type UseFloatingReturn<T extends ReferenceElement = ReferenceElement> = {
    */
   middlewareData: Readonly<Ref<MiddlewareData>>;
   /**
-   * The reference template ref.
-   */
-  reference: Ref<MaybeElement<T>>;
-  /**
-   * The floating template ref.
-   */
-  floating: Ref<MaybeElement<FloatingElement>>;
-  /**
    * The function to update floating position manually.
    */
   update: () => void;
@@ -87,17 +79,22 @@ export type UseFloatingReturn<T extends ReferenceElement = ReferenceElement> = {
 /**
  * Computes the `x` and `y` coordinates that will place the floating element next to a reference element when it is given a certain CSS positioning strategy.
  *
+ * @param reference The reference template ref.
+ * @param floating The floating template ref.
+ * @param options The floating options.
+ *
  * @see https://github.com/lozinsky/vue-floating-ui/blob/main/packages/vue-floating-ui/README.md
  */
 export function useFloating<T extends ReferenceElement = ReferenceElement>(
+  reference: Readonly<Ref<MaybeElement<T>>>,
+  floating: Readonly<Ref<MaybeElement<FloatingElement>>>,
   options: UseFloatingOptions<T> = {},
-): UseFloatingReturn<T> {
+): UseFloatingReturn {
+  const whileElementsMountedOption = options.whileElementsMounted;
   const middlewareOption = computed(() => unref(options.middleware));
   const placementOption = computed(() => unref(options.placement) ?? 'bottom');
   const strategyOption = computed(() => unref(options.strategy) ?? 'absolute');
-  const reference = shallowRef<MaybeElement<T>>(null);
   const referenceElement = computed(() => unwrapElement(reference.value));
-  const floating = shallowRef<MaybeElement<FloatingElement>>(null);
   const floatingElement = computed(() => unwrapElement(floating.value));
   const x = ref<number | null>(null);
   const y = ref<number | null>(null);
@@ -108,7 +105,7 @@ export function useFloating<T extends ReferenceElement = ReferenceElement>(
   let whileElementsMountedCleanup: void | (() => void);
 
   function update() {
-    if (referenceElement.value === null || floatingElement.value === null) {
+    if (referenceElement.value == null || floatingElement.value == null) {
       return;
     }
 
@@ -135,15 +132,13 @@ export function useFloating<T extends ReferenceElement = ReferenceElement>(
   function attach() {
     cleanup();
 
-    const { whileElementsMounted } = options;
-
-    if (whileElementsMounted === undefined) {
+    if (whileElementsMountedOption === undefined) {
       update();
       return;
     }
 
-    if (referenceElement.value !== null && floatingElement.value !== null) {
-      whileElementsMountedCleanup = whileElementsMounted(referenceElement.value, floatingElement.value, update);
+    if (referenceElement.value != null && floatingElement.value != null) {
+      whileElementsMountedCleanup = whileElementsMountedOption(referenceElement.value, floatingElement.value, update);
       return;
     }
   }
@@ -161,8 +156,6 @@ export function useFloating<T extends ReferenceElement = ReferenceElement>(
     strategy: shallowReadonly(strategy),
     placement: shallowReadonly(placement),
     middlewareData: shallowReadonly(middlewareData),
-    reference,
-    floating,
     update,
   };
 }

@@ -1,5 +1,13 @@
 import { type PropType, type UnwrapRef, computed, defineComponent, markRaw, ref, toRef } from 'vue';
-import { type Side, type UseFloatingOptions, arrow, autoUpdate, useFloating } from 'vue-floating-ui';
+import {
+  type FloatingElement,
+  type ReferenceElement,
+  type Side,
+  type UseFloatingOptions,
+  arrow,
+  autoUpdate,
+  useFloating,
+} from 'vue-floating-ui';
 
 describe('arrow', () => {
   const FloatingSandbox = defineComponent({
@@ -45,8 +53,10 @@ describe('arrow', () => {
         left: 'right',
       };
 
+      const reference = ref<ReferenceElement | null>(null);
+      const floating = ref<FloatingElement | null>(null);
       const floatingArrow = ref<HTMLElement | null>(null);
-      const { x, y, strategy, reference, floating, placement, middlewareData } = useFloating({
+      const { x, y, strategy, placement, middlewareData } = useFloating(reference, floating, {
         placement: toRef(props, 'placement'),
         middleware: [arrow({ element: floatingArrow, padding: props.floatingArrowPadding })],
         whileElementsMounted: props.whileElementsMounted,
