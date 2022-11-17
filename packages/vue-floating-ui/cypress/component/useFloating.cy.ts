@@ -1,5 +1,12 @@
-import { type PropType, type UnwrapRef, computed, defineComponent, markRaw, toRef } from 'vue';
-import { type UseFloatingOptions, autoUpdate, offset, useFloating } from 'vue-floating-ui';
+import { type PropType, type UnwrapRef, computed, defineComponent, markRaw, ref, toRef } from 'vue';
+import {
+  type FloatingElement,
+  type ReferenceElement,
+  type UseFloatingOptions,
+  autoUpdate,
+  offset,
+  useFloating,
+} from 'vue-floating-ui';
 
 describe('useFloating', () => {
   const FloatingSandbox = defineComponent({
@@ -58,7 +65,9 @@ describe('useFloating', () => {
     },
 
     setup(props) {
-      const { x, y, strategy, reference, floating, middlewareData, update } = useFloating({
+      const reference = ref<ReferenceElement | null>(null);
+      const floating = ref<FloatingElement | null>(null);
+      const { x, y, strategy, middlewareData, update } = useFloating(reference, floating, {
         placement: toRef(props, 'placement'),
         strategy: toRef(props, 'strategy'),
         middleware: toRef(props, 'middleware'),
