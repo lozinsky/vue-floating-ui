@@ -24,7 +24,7 @@ export default defineConfig({
           __VUE_OPTIONS_API__: true,
           __VUE_PROD_DEVTOOLS__: false,
         },
-        plugins: [tsconfigPaths({ root: workspaceRoot }), checker({ typescript: !isVue2 })],
+        plugins: [tsconfigPaths({ root: workspaceRoot }), checker({ typescript: true })],
       },
     },
   },

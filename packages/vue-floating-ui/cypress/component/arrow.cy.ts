@@ -1,4 +1,4 @@
-import { type PropType, type UnwrapRef, computed, defineComponent, markRaw, ref, toRef } from 'vue';
+import { type PropType, type UnwrapRef, computed, defineComponent, markRaw, ref, toRef } from 'vue-demi';
 import {
   type FloatingElement,
   type ReferenceElement,

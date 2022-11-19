@@ -1,5 +1,5 @@
 import { mount } from 'cypress/vue';
-import { type ComponentPublicInstance, type EffectScope, version } from 'vue';
+import { type ComponentPublicInstance, type EffectScope, isVue2 } from 'vue-demi';
 
 interface Wrapper {
   mount: (component: unknown, props?: Record<string, unknown>) => Cypress.Chainable<void>;
@@ -50,7 +50,7 @@ class Vue2Wrapper implements Wrapper {
   }
 }
 
-class VueWrapper implements Wrapper {
+class Vue3Wrapper implements Wrapper {
   private readonly getDependencies;
 
   public constructor(getDependencies: () => unknown) {
@@ -105,9 +105,9 @@ declare global {
   }
 }
 
-const wrapper: Wrapper = version.startsWith('2')
+const wrapper: Wrapper = isVue2
   ? new Vue2Wrapper(() => ({ mount, wrapper: Cypress.vueWrapper }))
-  : new VueWrapper(() => ({ mount, wrapper: Cypress.vueWrapper }));
+  : new Vue3Wrapper(() => ({ mount, wrapper: Cypress.vueWrapper }));
 
 Cypress.Commands.add('mount', (component, props) => wrapper.mount(component, props));
 Cypress.Commands.add('unmount', () => wrapper.unmount());
