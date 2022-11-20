@@ -1,51 +1,35 @@
-import { type PropType, type UnwrapRef, computed, defineComponent, markRaw, ref, toRef } from 'vue-demi';
+import { type Component, computed, defineComponent, markRaw, ref, toRef } from 'vue-demi';
 import {
   type FloatingElement,
+  type Placement,
   type ReferenceElement,
   type Side,
-  type UseFloatingOptions,
   arrow,
   autoUpdate,
   useFloating,
 } from 'vue-floating-ui';
 
 describe('arrow', () => {
+  type FloatingSandboxProps<T extends ReferenceElement = ReferenceElement> = {
+    referenceSize?: number;
+    floatingSize?: number;
+    floatingArrowType?: string | Component;
+    floatingArrowPadding?: number;
+    placement?: Placement;
+    whileElementsMounted?: (reference: T, floating: FloatingElement, update: () => void) => void | (() => void);
+  };
+
   const FloatingSandbox = defineComponent({
     name: 'FloatingSandbox',
-
-    props: {
-      referenceSize: {
-        type: Number,
-        default: 50,
-      },
-
-      floatingSize: {
-        type: Number,
-        default: 50,
-      },
-
-      floatingArrowType: {
-        type: [String, Object],
-        default: 'div',
-      },
-
-      floatingArrowPadding: {
-        type: Number,
-        default: undefined,
-      },
-
-      placement: {
-        type: String as PropType<UnwrapRef<UseFloatingOptions['placement']>>,
-        default: undefined,
-      },
-
-      whileElementsMounted: {
-        type: Function as PropType<UseFloatingOptions['whileElementsMounted']>,
-        default: undefined,
-      },
-    },
-
-    setup(props) {
+    props: [
+      'referenceSize',
+      'floatingSize',
+      'floatingArrowType',
+      'floatingArrowPadding',
+      'placement',
+      'whileElementsMounted',
+    ],
+    setup(props: FloatingSandboxProps) {
       const OPPOSITE_SIDE_BY_SIDE: Record<Side, Side> = {
         top: 'bottom',
         right: 'left',
@@ -63,9 +47,9 @@ describe('arrow', () => {
       });
       const side = computed(() => placement.value.split('-')[0] as Side);
       const referenceSize = toRef(props, 'referenceSize');
-      const referenceWidth = computed(() => `${referenceSize.value}px`);
+      const referenceWidth = computed(() => `${referenceSize.value ?? 50}px`);
       const floatingSize = toRef(props, 'floatingSize');
-      const floatingWidth = computed(() => `${floatingSize.value}px`);
+      const floatingWidth = computed(() => `${floatingSize.value ?? 50}px`);
       const floatingTop = computed(() => `${y.value ?? 0}px`);
       const floatingLeft = computed(() => `${x.value ?? 0}px`);
       const floatingArrowTop = computed(() => `${middlewareData.value.arrow?.y ?? 0}px`);
@@ -86,7 +70,6 @@ describe('arrow', () => {
         floatingArrowBalance,
       };
     },
-
     template: /* HTML */ `
       <div>
         <div
@@ -111,7 +94,7 @@ describe('arrow', () => {
           <component
             data-cy-floating-arrow
             ref="floatingArrow"
-            :is="floatingArrowType"
+            :is="floatingArrowType ?? 'div'"
             :style="{
               position: 'absolute',
               backgroundColor: 'darkslateblue',

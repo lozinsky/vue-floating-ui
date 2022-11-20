@@ -1,70 +1,44 @@
-import { type PropType, type UnwrapRef, computed, defineComponent, markRaw, ref, toRef } from 'vue-demi';
+import { type Component, computed, defineComponent, markRaw, ref, toRef } from 'vue-demi';
 import {
   type FloatingElement,
+  type Middleware,
+  type Placement,
   type ReferenceElement,
-  type UseFloatingOptions,
+  type Strategy,
   autoUpdate,
   offset,
   useFloating,
 } from 'vue-floating-ui';
 
 describe('useFloating', () => {
+  type FloatingSandboxProps<T extends ReferenceElement = ReferenceElement> = {
+    isReferenceVisible?: boolean;
+    isFloatingVisible?: boolean;
+    referenceType?: string | Component;
+    floatingType?: string | Component;
+    referenceSize?: number;
+    floatingSize?: number;
+    placement?: Placement;
+    strategy?: Strategy;
+    middleware?: Middleware[];
+    whileElementsMounted?: (reference: T, floating: FloatingElement, update: () => void) => void | (() => void);
+  };
+
   const FloatingSandbox = defineComponent({
     name: 'FloatingSandbox',
-
-    props: {
-      isReferenceVisible: {
-        type: Boolean,
-        default: true,
-      },
-
-      isFloatingVisible: {
-        type: Boolean,
-        default: true,
-      },
-
-      referenceType: {
-        type: [String, Object],
-        default: 'div',
-      },
-
-      floatingType: {
-        type: [String, Object],
-        default: 'div',
-      },
-
-      referenceSize: {
-        type: Number,
-        default: 50,
-      },
-
-      floatingSize: {
-        type: Number,
-        default: 50,
-      },
-
-      placement: {
-        type: String as PropType<UnwrapRef<UseFloatingOptions['placement']>>,
-        default: undefined,
-      },
-
-      strategy: {
-        type: String as PropType<UnwrapRef<UseFloatingOptions['strategy']>>,
-        default: undefined,
-      },
-
-      middleware: {
-        type: Array as PropType<UnwrapRef<UseFloatingOptions['middleware']>>,
-        default: undefined,
-      },
-
-      whileElementsMounted: {
-        type: Function as PropType<UseFloatingOptions['whileElementsMounted']>,
-        default: undefined,
-      },
-    },
-
-    setup(props) {
+    props: [
+      'isReferenceVisible',
+      'isFloatingVisible',
+      'referenceType',
+      'floatingType',
+      'referenceSize',
+      'floatingSize',
+      'placement',
+      'strategy',
+      'middleware',
+      'whileElementsMounted',
+    ],
+    setup(props: FloatingSandboxProps) {
       const reference = ref<ReferenceElement | null>(null);
       const floating = ref<FloatingElement | null>(null);
       const { x, y, strategy, middlewareData, update } = useFloating(reference, floating, {
@@ -74,9 +48,9 @@ describe('useFloating', () => {
         whileElementsMounted: props.whileElementsMounted,
       });
       const referenceSize = toRef(props, 'referenceSize');
-      const referenceWidth = computed(() => `${referenceSize.value}px`);
+      const referenceWidth = computed(() => `${referenceSize.value ?? 50}px`);
       const floatingSize = toRef(props, 'floatingSize');
-      const floatingWidth = computed(() => `${floatingSize.value}px`);
+      const floatingWidth = computed(() => `${floatingSize.value ?? 50}px`);
       const floatingTop = computed(() => `${y.value ?? 0}px`);
       const floatingLeft = computed(() => `${x.value ?? 0}px`);
       const floatingMiddlewareData = computed(() => JSON.stringify(middlewareData.value));
@@ -93,13 +67,12 @@ describe('useFloating', () => {
         update,
       };
     },
-
     template: /* HTML */ `
       <div>
         <component
-          v-if="isReferenceVisible"
+          v-if="isReferenceVisible ?? true"
           ref="reference"
-          :is="referenceType"
+          :is="referenceType ?? 'div'"
           :style="{
             aspectRatio: '1',
             backgroundColor: 'brown',
@@ -107,10 +80,10 @@ describe('useFloating', () => {
           }"
         />
         <component
-          v-if="isFloatingVisible"
+          v-if="isFloatingVisible ?? true"
           data-cy-floating
           ref="floating"
-          :is="floatingType"
+          :is="floatingType ?? 'div'"
           :style="{
             aspectRatio: '1',
             backgroundColor: 'dimgrey',
@@ -298,7 +271,7 @@ describe('useFloating', () => {
       .getByDataCy('floating')
       .should('have.css', 'top', '58px')
       .should('have.css', 'left', '8px')
-      .getComponent()
+      .getComponent<InstanceType<typeof FloatingSandbox>>()
       .invoke('update')
       .getByDataCy('floating')
       .should('have.css', 'top', '100px')

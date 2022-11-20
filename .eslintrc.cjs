@@ -19,14 +19,13 @@ module.exports = {
       files: ['**/cypress/**/*.ts'],
       rules: {
         '@typescript-eslint/no-namespace': 'off',
-
         'vue/one-component-per-file': 'off',
       },
     },
   ],
   rules: {
     '@typescript-eslint/no-floating-promises': 'off',
-
+    'vue/require-prop-types': 'off',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
   },
