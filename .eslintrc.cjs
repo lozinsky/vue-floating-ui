@@ -13,7 +13,7 @@ module.exports = {
     ecmaVersion: 'latest',
     project: ['./tsconfig.json'],
   },
-  ignorePatterns: ['dist/', '*.cjs', '*.mjs', '*.js'],
+  ignorePatterns: ['dist/', 'lib/', '*.cjs', '*.mjs', '*.js'],
   rules: {
     '@typescript-eslint/no-floating-promises': 'off',
     '@typescript-eslint/no-namespace': 'off',

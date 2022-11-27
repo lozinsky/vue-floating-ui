@@ -1,8 +1,12 @@
 import { mount } from 'cypress/vue';
-import { type ComponentPublicInstance, type EffectScope, isVue2 } from 'vue-demi';
+import { type ComponentPublicInstance, type EffectScope, isVue2 } from 'vue-floating-ui-vue-demi';
 
 interface Wrapper {
-  mount: (component: unknown, props?: Record<string, unknown>) => Cypress.Chainable<void>;
+  mount: (
+    component: unknown,
+    props?: Record<string, unknown>,
+    slots?: Record<string, unknown>,
+  ) => Cypress.Chainable<void>;
   unmount: () => Cypress.Chainable<void>;
   setProps: (props: Record<string, unknown>) => Cypress.Chainable<void>;
   getScope: () => Cypress.Chainable<EffectScope>;
@@ -25,8 +29,8 @@ class Vue2Wrapper implements Wrapper {
     };
   }
 
-  mount(component: unknown, props?: Record<string, unknown>) {
-    return this.getDependencies().mount(component, { propsData: props });
+  mount(component: unknown, props?: Record<string, unknown>, slots?: Record<string, unknown>) {
+    return this.getDependencies().mount(component, { propsData: props, slots });
   }
 
   unmount() {
@@ -66,8 +70,8 @@ class Vue3Wrapper implements Wrapper {
     };
   }
 
-  mount(component: unknown, props?: Record<string, unknown>) {
-    return this.getDependencies().mount(component, { props });
+  mount(component: unknown, props?: Record<string, unknown>, slots?: Record<string, unknown>) {
+    return this.getDependencies().mount(component, { props, slots });
   }
 
   unmount() {
@@ -94,7 +98,7 @@ class Vue3Wrapper implements Wrapper {
 declare global {
   namespace Cypress {
     interface Chainable {
-      mount: (component: unknown, props?: Record<string, unknown>) => Chainable<void>;
+      mount: (component: unknown, props?: Record<string, unknown>, slots?: Record<string, unknown>) => Chainable<void>;
       unmount: () => Chainable<void>;
       setProps: (props: Record<string, unknown>) => Chainable<void>;
       getScope: () => Chainable<EffectScope>;
@@ -109,7 +113,7 @@ const wrapper: Wrapper = isVue2
   ? new Vue2Wrapper(() => ({ mount, wrapper: Cypress.vueWrapper }))
   : new Vue3Wrapper(() => ({ mount, wrapper: Cypress.vueWrapper }));
 
-Cypress.Commands.add('mount', (component, props) => wrapper.mount(component, props));
+Cypress.Commands.add('mount', (component, props, slots) => wrapper.mount(component, props, slots));
 Cypress.Commands.add('unmount', () => wrapper.unmount());
 Cypress.Commands.add('setProps', (props) => wrapper.setProps(props));
 Cypress.Commands.add('getScope', () => wrapper.getScope());
