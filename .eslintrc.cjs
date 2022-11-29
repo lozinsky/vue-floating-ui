@@ -13,18 +13,11 @@ module.exports = {
     ecmaVersion: 'latest',
     project: ['./tsconfig.json'],
   },
-  ignorePatterns: ['dist/', '.*rc.cjs', '*.config.mjs'],
-  overrides: [
-    {
-      files: ['**/cypress/**/*.ts'],
-      rules: {
-        '@typescript-eslint/no-namespace': 'off',
-        'vue/one-component-per-file': 'off',
-      },
-    },
-  ],
+  ignorePatterns: ['dist/', '*.cjs', '*.mjs', '*.js'],
   rules: {
     '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/no-namespace': 'off',
+    'vue/one-component-per-file': 'off',
     'vue/require-prop-types': 'off',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',

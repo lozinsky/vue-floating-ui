@@ -6,5 +6,5 @@
       "*": ["./packages/*/src/"]
     }
   },
-  "include": ["./packages/*/src/", "./packages/*/cypress/"]
+  "include": ["./packages/*/src/", "./cypress/"]
 }

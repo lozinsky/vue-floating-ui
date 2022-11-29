@@ -75,4 +75,4 @@ jobs:
         run: npx vue-demi-switch ${{ matrix.vue-version }} ${{ matrix.vue-package }}
 
       - name: Run code test
-        run: npm test --workspaces
+        run: npm test

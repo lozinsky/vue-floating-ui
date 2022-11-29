@@ -3,7 +3,5 @@
 node_modules/
 npm-debug.log
 
-**/cypress/screenshots/
-**/cypress/downloads/
-
-dist/
+cypress/screenshots/
+cypress/downloads/
