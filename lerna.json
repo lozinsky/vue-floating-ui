@@ -3,7 +3,7 @@
   "useWorkspaces": true,
   "command": {
     "publish": {
-      "removePackageFields": ["devDependencies", "scripts"]
+      "removePackageFields": ["devDependencies", "scripts.build"]
     },
     "version": {
       "allowBranch": "main",
@@ -13,5 +13,5 @@
       "message": "chore: release packages"
     }
   },
-  "ignoreChanges": ["**/cypress/**", "**/*.md"]
+  "ignoreChanges": ["**/test/**", "**/*.md"]
 }

@@ -3,9 +3,6 @@ import { join } from 'node:path';
 
 import { defineConfig, searchForWorkspaceRoot } from 'vite';
 import dts from 'vite-plugin-dts';
-import checker from 'vite-plugin-checker';
-
-const workspaceRoot = searchForWorkspaceRoot(process.cwd());
 
 export default defineConfig({
   build: {
@@ -28,9 +25,8 @@ export default defineConfig({
     exclude: ['vue-demi'],
   },
   plugins: [
-    checker({ typescript: true }),
     dts({
-      tsConfigFilePath: join(workspaceRoot, 'tsconfig.json'),
+      tsConfigFilePath: join(searchForWorkspaceRoot(process.cwd()), 'tsconfig.json'),
       entryRoot: './src/',
       include: ['./src/'],
     }),
