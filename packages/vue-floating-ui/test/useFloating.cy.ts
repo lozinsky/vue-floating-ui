@@ -1,4 +1,3 @@
-import { type Component, computed, defineComponent, markRaw, ref, toRef } from 'vue-demi';
 import {
   type FloatingElement,
   type Middleware,
@@ -9,6 +8,7 @@ import {
   offset,
   useFloating,
 } from 'vue-floating-ui';
+import { type Component, computed, defineComponent, markRaw, ref, toRef } from 'vue-floating-ui-vue-demi';
 
 describe('useFloating', () => {
   type FloatingSandboxProps<T extends ReferenceElement = ReferenceElement> = {

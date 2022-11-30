@@ -1,4 +1,4 @@
-import type { ComponentPublicInstance } from 'vue-demi';
+import type { ComponentPublicInstance } from 'vue-floating-ui-vue-demi';
 
 import type { MaybeElement } from '../types';
 

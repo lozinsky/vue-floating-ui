@@ -1,5 +1,5 @@
 import { type Middleware, type Padding, arrow as apply } from '@floating-ui/dom';
-import { unref } from 'vue-demi';
+import { unref } from 'vue-floating-ui-vue-demi';
 
 import type { MaybeElement, MaybeReadonlyRef } from '../types';
 import { unwrapElement } from '../utils/unwrapElement';

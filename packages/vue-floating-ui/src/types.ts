@@ -1,4 +1,4 @@
-import type { ComponentPublicInstance, Ref } from 'vue-demi';
+import type { ComponentPublicInstance, Ref } from 'vue-floating-ui-vue-demi';
 
 export type MaybeReadonlyRef<T> = T | Readonly<Ref<T>>;
 

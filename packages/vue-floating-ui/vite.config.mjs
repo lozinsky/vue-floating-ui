@@ -12,17 +12,17 @@ export default defineConfig({
       fileName: 'vue-floating-ui',
     },
     rollupOptions: {
-      external: ['vue-demi', '@floating-ui/dom'],
+      external: ['@floating-ui/dom', 'vue-floating-ui-vue-demi'],
       output: {
         globals: {
-          'vue-demi': 'VueDemi',
           '@floating-ui/dom': 'FloatingUIDOM',
+          'vue-floating-ui-vue-demi': 'VueFloatingUIVueDemi',
         },
       },
     },
   },
   optimizeDeps: {
-    exclude: ['vue-demi'],
+    exclude: ['vue-floating-ui-vue-demi'],
   },
   plugins: [
     dts({

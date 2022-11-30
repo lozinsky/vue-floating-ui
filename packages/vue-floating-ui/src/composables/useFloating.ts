@@ -17,7 +17,7 @@ import {
   shallowRef,
   unref,
   watch,
-} from 'vue-demi';
+} from 'vue-floating-ui-vue-demi';
 
 import type { MaybeElement, MaybeReadonlyRef } from '../types';
 import { unwrapElement } from '../utils/unwrapElement';
