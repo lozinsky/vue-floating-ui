@@ -15,6 +15,7 @@ module.exports = {
   },
   ignorePatterns: ['dist/', 'lib/', '*.cjs', '*.mjs', '*.js'],
   rules: {
+    '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-floating-promises': 'off',
     '@typescript-eslint/no-namespace': 'off',
     'vue/one-component-per-file': 'off',
