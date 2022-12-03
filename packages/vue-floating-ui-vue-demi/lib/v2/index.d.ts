@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import type { Component } from 'vue-demi';
+import type { Vue2 } from 'vue-demi';
 
 export interface RendererNode {
   [key: string]: any;
@@ -13,6 +13,6 @@ export interface TeleportProps {
   disabled?: boolean;
 }
 
-export const Teleport: Component<TeleportProps>;
+export const Teleport: typeof Vue2;
 
 export * from 'vue-demi';

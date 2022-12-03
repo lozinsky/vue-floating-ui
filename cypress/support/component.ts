@@ -1,5 +1,5 @@
 import { mount } from 'cypress/vue';
-import { type ComponentPublicInstance, type EffectScope, isVue2 } from 'vue-floating-ui-vue-demi';
+import { isVue2 } from 'vue-floating-ui-vue-demi';
 
 interface Wrapper {
   mount: (
@@ -9,9 +9,8 @@ interface Wrapper {
   ) => Cypress.Chainable<void>;
   unmount: () => Cypress.Chainable<void>;
   setProps: (props: Record<string, unknown>) => Cypress.Chainable<void>;
-  getScope: () => Cypress.Chainable<EffectScope>;
   getElement: () => Cypress.Chainable<JQuery<Element>>;
-  getComponent: () => Cypress.Chainable<ComponentPublicInstance>;
+  getComponent: <T>() => Cypress.Chainable<T>;
 }
 
 class Vue2Wrapper implements Wrapper {
@@ -22,7 +21,7 @@ class Vue2Wrapper implements Wrapper {
       mount: (component: unknown, options?: Record<string, unknown>) => Cypress.Chainable<void>;
       wrapper: {
         element: Element;
-        vm: ComponentPublicInstance & { _scope: EffectScope };
+        vm: unknown;
         destroy: () => void;
         setProps: (props: Record<string, unknown>) => Promise<void>;
       };
@@ -41,16 +40,12 @@ class Vue2Wrapper implements Wrapper {
     return cy.then(() => this.getDependencies().wrapper.setProps(props));
   }
 
-  getScope() {
-    return cy.then(() => this.getDependencies().wrapper.vm._scope);
-  }
-
   getElement() {
     return cy.wrap(this.getDependencies().wrapper.element);
   }
 
-  getComponent() {
-    return cy.then(() => this.getDependencies().wrapper.vm as ComponentPublicInstance);
+  getComponent<T>() {
+    return cy.then(() => this.getDependencies().wrapper.vm) as Cypress.Chainable<T>;
   }
 }
 
@@ -62,10 +57,9 @@ class Vue3Wrapper implements Wrapper {
       mount: (component: unknown, options?: Record<string, unknown>) => Cypress.Chainable<void>;
       wrapper: {
         element: Element;
-        vm: ComponentPublicInstance;
+        vm: unknown;
         unmount: () => void;
         setProps: (props: Record<string, unknown>) => Promise<void>;
-        getCurrentComponent: () => { scope: EffectScope };
       };
     };
   }
@@ -82,16 +76,12 @@ class Vue3Wrapper implements Wrapper {
     return cy.then(() => this.getDependencies().wrapper.setProps(props));
   }
 
-  getScope() {
-    return cy.wrap(this.getDependencies().wrapper.getCurrentComponent().scope);
-  }
-
   getElement() {
     return cy.wrap(this.getDependencies().wrapper.element);
   }
 
-  getComponent() {
-    return cy.then(() => this.getDependencies().wrapper.vm);
+  getComponent<T>() {
+    return cy.then(() => this.getDependencies().wrapper.vm) as Cypress.Chainable<T>;
   }
 }
 
@@ -101,9 +91,8 @@ declare global {
       mount: (component: unknown, props?: Record<string, unknown>, slots?: Record<string, unknown>) => Chainable<void>;
       unmount: () => Chainable<void>;
       setProps: (props: Record<string, unknown>) => Chainable<void>;
-      getScope: () => Chainable<EffectScope>;
       getElement: () => Chainable<JQuery<Element>>;
-      getComponent: <T extends ComponentPublicInstance>() => Chainable<T>;
+      getComponent: <T>() => Chainable<T>;
       getByDataCy: (value: string) => Chainable<JQuery<HTMLElement>>;
     }
   }
@@ -116,7 +105,6 @@ const wrapper: Wrapper = isVue2
 Cypress.Commands.add('mount', (component, props, slots) => wrapper.mount(component, props, slots));
 Cypress.Commands.add('unmount', () => wrapper.unmount());
 Cypress.Commands.add('setProps', (props) => wrapper.setProps(props));
-Cypress.Commands.add('getScope', () => wrapper.getScope());
 Cypress.Commands.add('getElement', () => wrapper.getElement());
 Cypress.Commands.add('getComponent', () => wrapper.getComponent());
 Cypress.Commands.add('getByDataCy', (value) => cy.get(`[data-cy-${value}]`));

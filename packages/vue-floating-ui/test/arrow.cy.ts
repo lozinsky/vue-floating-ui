@@ -1,4 +1,4 @@
-import { type Component, computed, defineComponent, markRaw, ref, toRef } from 'vue-demi';
+import { computed, defineComponent, markRaw, ref, toRef } from 'vue-demi';
 import {
   type FloatingElement,
   type Placement,
@@ -13,7 +13,7 @@ describe('arrow', () => {
   type FloatingSandboxProps<T extends ReferenceElement = ReferenceElement> = {
     referenceSize?: number;
     floatingSize?: number;
-    floatingArrowType?: string | Component;
+    floatingArrowType?: unknown;
     floatingArrowPadding?: number;
     placement?: Placement;
     whileElementsMounted?: (reference: T, floating: FloatingElement, update: () => void) => void | (() => void);
