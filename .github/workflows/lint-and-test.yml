@@ -72,7 +72,7 @@ jobs:
         run: npm ci
 
       - name: Setup Vue
-        run: npx vue-demi-switch ${{ matrix.vue-version }} ${{ matrix.vue-package }}
+        run: npx vue-floating-ui-vue-demi-switch ${{ matrix.vue-version }} ${{ matrix.vue-package }}
 
       - name: Run code test
         run: npm test
