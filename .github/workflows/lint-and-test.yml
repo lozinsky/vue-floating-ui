@@ -44,12 +44,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        vue-version: [3, 2.7]
+        vue-version: [3, 2.7, 2]
         include:
           - vue-version: 3
             vue-package: vue
           - vue-version: 2.7
             vue-package: vue2.7
+          - vue-version: 2
+            vue-package: vue2
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

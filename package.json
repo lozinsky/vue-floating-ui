@@ -15,6 +15,7 @@
     "@lerna-lite/cli": "^1.12.0",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
+    "@vue/composition-api": "^1.7.1",
     "@vue/tsconfig": "^0.1.3",
     "conventional-changelog-conventionalcommits": "^5.0.0",
     "cypress": "^11.0.1",
@@ -33,6 +34,12 @@
     "vite-tsconfig-paths": "^3.5.2",
     "vue": "^3.2.45",
     "vue-floating-ui-vue-demi": "^0.0.0",
+    "vue2": "npm:vue@~2.6.14",
     "vue2.7": "npm:vue@^2.7.14"
+  },
+  "overrides": {
+    "@vue/composition-api": {
+      "vue": "$vue"
+    }
   }
 }

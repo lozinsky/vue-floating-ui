@@ -1,9 +1,9 @@
-import { type Component, type TeleportProps, defineComponent, Teleport } from 'vue-floating-ui-vue-demi';
+import { defineComponent, Teleport } from 'vue-floating-ui-vue-demi';
 
 describe('Teleport', () => {
   const FloatingSandbox = defineComponent({
     name: 'FloatingSandbox',
-    components: { Teleport: Teleport as unknown as Component<TeleportProps> },
+    components: { Teleport } as unknown as undefined,
     props: ['to', 'disabled'],
     template: /* HTML */ `
       <Teleport v-bind="$props">
@@ -33,7 +33,7 @@ describe('Teleport', () => {
   it('renders multiple teleports with the same target', () => {
     const FloatingSandbox = defineComponent({
       name: 'FloatingSandbox',
-      components: { Teleport: Teleport as unknown as Component<TeleportProps> },
+      components: { Teleport } as unknown as undefined,
       props: ['to'],
       template: /* HTML */ `
         <div>
@@ -104,7 +104,7 @@ describe('Teleport', () => {
   it('updates content on slot change', () => {
     const FloatingSandbox = defineComponent({
       name: 'FloatingSandbox',
-      components: { Teleport: Teleport as unknown as Component<TeleportProps> },
+      components: { Teleport } as unknown as undefined,
       props: ['to'],
       data() {
         return { content: 'A' };

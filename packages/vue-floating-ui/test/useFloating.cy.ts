@@ -1,4 +1,4 @@
-import { type Component, computed, defineComponent, markRaw, ref, toRef } from 'vue-demi';
+import { computed, defineComponent, effectScope, markRaw, ref, toRef } from 'vue-demi';
 import {
   type FloatingElement,
   type Middleware,
@@ -14,8 +14,8 @@ describe('useFloating', () => {
   type FloatingSandboxProps<T extends ReferenceElement = ReferenceElement> = {
     isReferenceVisible?: boolean;
     isFloatingVisible?: boolean;
-    referenceType?: string | Component;
-    floatingType?: string | Component;
+    referenceType?: unknown;
+    floatingType?: unknown;
     referenceSize?: number;
     floatingSize?: number;
     placement?: Placement;
@@ -194,55 +194,67 @@ describe('useFloating', () => {
   });
 
   it('does not call `whileElementsMounted` cleanup callback on reference change', () => {
-    const cleanup = cy.spy().as('cleanup');
-
-    cy.mount(FloatingSandbox, { whileElementsMounted: () => cleanup })
+    cy.mount(FloatingSandbox, { whileElementsMounted: cy.stub().returns(cy.spy().as('cleanup')) })
       .setProps({ referenceSize: 100 })
       .get('@cleanup')
       .should('have.callCount', 0);
   });
 
   it('does not call `whileElementsMounted` cleanup callback on floating change', () => {
-    const cleanup = cy.spy().as('cleanup');
-
-    cy.mount(FloatingSandbox, { whileElementsMounted: () => cleanup })
+    cy.mount(FloatingSandbox, { whileElementsMounted: cy.stub().returns(cy.spy().as('cleanup')) })
       .setProps({ floatingSize: 100 })
       .get('@cleanup')
       .should('have.callCount', 0);
   });
 
   it('calls `whileElementsMounted` cleanup callback on reference visibility change', () => {
-    const cleanup = cy.spy().as('cleanup');
-
-    cy.mount(FloatingSandbox, { whileElementsMounted: () => cleanup })
+    cy.mount(FloatingSandbox, { whileElementsMounted: cy.stub().returns(cy.spy().as('cleanup')) })
       .setProps({ isReferenceVisible: false })
       .get('@cleanup')
       .should('have.callCount', 1);
   });
 
   it('calls `whileElementsMounted` cleanup callback on floating visibility change', () => {
-    const cleanup = cy.spy().as('cleanup');
-
-    cy.mount(FloatingSandbox, { whileElementsMounted: () => cleanup })
+    cy.mount(FloatingSandbox, { whileElementsMounted: cy.stub().returns(cy.spy().as('cleanup')) })
       .setProps({ isFloatingVisible: false })
       .get('@cleanup')
       .should('have.callCount', 1);
   });
 
   it('calls `whileElementsMounted` cleanup callback on unmount', () => {
-    const cleanup = cy.spy().as('cleanup');
-
-    cy.mount(FloatingSandbox, { whileElementsMounted: () => cleanup })
+    cy.mount(FloatingSandbox, { whileElementsMounted: cy.stub().returns(cy.spy().as('cleanup')) })
       .unmount()
       .get('@cleanup')
       .should('have.callCount', 1);
   });
 
   it('calls `whileElementsMounted` cleanup callback on scope dispose', () => {
-    const cleanup = cy.spy().as('cleanup');
+    const FloatingSandbox = defineComponent({
+      name: 'FloatingSandbox',
+      props: ['whileElementsMounted'],
+      setup(props: FloatingSandboxProps) {
+        const reference = ref<ReferenceElement | null>(null);
+        const floating = ref<FloatingElement | null>(null);
+        const scope = effectScope();
 
-    cy.mount(FloatingSandbox, { whileElementsMounted: () => cleanup })
-      .getScope()
+        function stop() {
+          scope.stop();
+        }
+
+        scope.run(() => useFloating(reference, floating, { whileElementsMounted: props.whileElementsMounted }));
+
+        return { reference, floating, stop };
+      },
+      template: /* HTML */ `
+        <div>
+          <div ref="reference" />
+          <div ref="floating" />
+        </div>
+      `,
+    });
+
+    cy.mount(FloatingSandbox, { whileElementsMounted: cy.stub().returns(cy.spy().as('cleanup')) })
+      .getComponent<InstanceType<typeof FloatingSandbox>>()
       .invoke('stop')
       .get('@cleanup')
       .should('have.callCount', 1);
