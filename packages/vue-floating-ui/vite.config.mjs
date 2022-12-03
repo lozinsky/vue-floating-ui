@@ -12,11 +12,11 @@ export default defineConfig({
       fileName: 'vue-floating-ui',
     },
     rollupOptions: {
-      external: ['vue-demi', '@floating-ui/dom'],
+      external: ['@floating-ui/dom', 'vue-demi'],
       output: {
         globals: {
-          'vue-demi': 'VueDemi',
           '@floating-ui/dom': 'FloatingUIDOM',
+          'vue-demi': 'VueDemi',
         },
       },
     },
