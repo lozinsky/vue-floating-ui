@@ -37,10 +37,10 @@ describe('Teleport', () => {
       props: ['to'],
       template: /* HTML */ `
         <div>
-          <Teleport v-bind="$props">
+          <Teleport :to="to">
             <div data-cy-a>A</div>
           </Teleport>
-          <Teleport v-bind="$props">
+          <Teleport :to="to">
             <div data-cy-b>B</div>
           </Teleport>
         </div>
@@ -80,7 +80,10 @@ describe('Teleport', () => {
       .getByDataCy('content')
       .parent()
       .invoke('is', Cypress.$(target))
-      .should('be.true');
+      .should('be.true')
+      .then(() => {
+        target.remove();
+      });
   });
 
   it('updates location on `disabled` prop change', () => {
@@ -110,7 +113,7 @@ describe('Teleport', () => {
         return { content: 'A' };
       },
       template: /* HTML */ `
-        <Teleport v-bind="$props">
+        <Teleport :to="to">
           <div data-cy-content>{{ content }}</div>
         </Teleport>
       `,

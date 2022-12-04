@@ -165,7 +165,7 @@ describe('arrow', () => {
       floatingArrowType: markRaw(
         defineComponent({
           name: 'UseFloatingArrow',
-          template: /* HTML */ `<div></div>`,
+          template: /* HTML */ `<div />`,
         }),
       ),
     })

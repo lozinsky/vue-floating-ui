@@ -237,13 +237,13 @@ describe('useFloating', () => {
         const floating = ref<FloatingElement | null>(null);
         const scope = effectScope();
 
-        function stop() {
+        function dispose() {
           scope.stop();
         }
 
         scope.run(() => useFloating(reference, floating, { whileElementsMounted: props.whileElementsMounted }));
 
-        return { reference, floating, stop };
+        return { reference, floating, dispose };
       },
       template: /* HTML */ `
         <div>
@@ -255,7 +255,7 @@ describe('useFloating', () => {
 
     cy.mount(FloatingSandbox, { whileElementsMounted: cy.stub().returns(cy.spy().as('cleanup')) })
       .getComponent<InstanceType<typeof FloatingSandbox>>()
-      .invoke('stop')
+      .invoke('dispose')
       .get('@cleanup')
       .should('have.callCount', 1);
   });
