@@ -1,6 +1,6 @@
 # Vue Floating UI Vue Demi
 
-This is a wrapper of the [`vue-demi`](https://github.com/vueuse/vue-demi) package that provides some additional polyfills e.g. `Teleport` component.
+This is a wrapper of the [`vue-demi`](https://github.com/vueuse/vue-demi) package that provides some additional polyfills e.g. [`Teleport`](https://vuejs.org/guide/built-ins/teleport.html#teleport) component.
 
 ## Limitations
 
