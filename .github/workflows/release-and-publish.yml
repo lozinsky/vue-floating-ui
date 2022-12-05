@@ -19,7 +19,7 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Store cache path
-        run: echo 'cache_path=$(npm config get cache)' >> $GITHUB_ENV
+        run: echo "cache_path=$(npm config get cache)" >> $GITHUB_ENV
 
       - name: Restore cache
         uses: actions/cache@v3

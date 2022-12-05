@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: Store cache path
-        run: echo 'cache_path=$(npm config get cache)' >> $GITHUB_ENV
+        run: echo "cache_path=$(npm config get cache)" >> $GITHUB_ENV
 
       - name: Restore cache
         uses: actions/cache@v3
@@ -60,7 +60,7 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: Store cache path
-        run: echo 'cache_path=$(npm config get cache)' >> $GITHUB_ENV
+        run: echo "cache_path=$(npm config get cache)" >> $GITHUB_ENV
 
       - name: Restore cache
         uses: actions/cache@v3
