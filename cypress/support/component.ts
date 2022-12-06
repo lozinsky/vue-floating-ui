@@ -1,6 +1,45 @@
 import { mount } from 'cypress/vue';
 import { isVue2 } from 'vue-floating-ui-vue-demi';
 
+class Context {
+  private isConsoleWarnAllowed?: boolean;
+  private isConsoleErrorAllowed?: boolean;
+
+  public beforeEach() {
+    this.isConsoleWarnAllowed = false;
+    this.isConsoleErrorAllowed = false;
+
+    cy.stub(console, 'warn').as('consoleWarn');
+    cy.stub(console, 'error').as('consoleError');
+  }
+
+  public afterEach() {
+    if (!this.isConsoleWarnAllowed) {
+      cy.getConsoleWarn().should('not.be.called');
+    }
+
+    if (!this.isConsoleErrorAllowed) {
+      cy.getConsoleError().should('not.be.called');
+    }
+  }
+
+  public getConsoleWarn() {
+    return cy.get<sinon.SinonStub>('@consoleWarn');
+  }
+
+  public getConsoleError() {
+    return cy.get<sinon.SinonStub>('@consoleError');
+  }
+
+  public allowConsoleWarn() {
+    return cy.then(() => void (this.isConsoleWarnAllowed = true)) as Cypress.Chainable<void>;
+  }
+
+  public allowConsoleError() {
+    return cy.then(() => void (this.isConsoleErrorAllowed = true)) as Cypress.Chainable<void>;
+  }
+}
+
 interface Wrapper {
   mount: (
     component: unknown,
@@ -94,10 +133,15 @@ declare global {
       getElement: () => Chainable<JQuery<Element>>;
       getComponent: <T>() => Chainable<T>;
       getByDataCy: (value: string) => Chainable<JQuery<HTMLElement>>;
+      getConsoleWarn: () => Chainable<sinon.SinonStub>;
+      getConsoleError: () => Chainable<sinon.SinonStub>;
+      allowConsoleWarn: () => Chainable<void>;
+      allowConsoleError: () => Chainable<void>;
     }
   }
 }
 
+const context = new Context();
 const wrapper: Wrapper = isVue2
   ? new Vue2Wrapper(() => ({ mount, wrapper: Cypress.vueWrapper }))
   : new Vue3Wrapper(() => ({ mount, wrapper: Cypress.vueWrapper }));
@@ -108,15 +152,15 @@ Cypress.Commands.add('setProps', (props) => wrapper.setProps(props));
 Cypress.Commands.add('getElement', () => wrapper.getElement());
 Cypress.Commands.add('getComponent', () => wrapper.getComponent());
 Cypress.Commands.add('getByDataCy', (value) => cy.get(`[data-cy-${value}]`));
+Cypress.Commands.add('getConsoleWarn', () => context.getConsoleWarn());
+Cypress.Commands.add('getConsoleError', () => context.getConsoleError());
+Cypress.Commands.add('allowConsoleWarn', () => context.allowConsoleWarn());
+Cypress.Commands.add('allowConsoleError', () => context.allowConsoleError());
 
 beforeEach(() => {
-  cy.window().then((window) => {
-    cy.spy(window.console, 'warn').as('console.warn');
-    cy.spy(window.console, 'error').as('console.error');
-  });
+  context.beforeEach();
 });
 
 afterEach(() => {
-  cy.get('@console.warn').should('not.be.called');
-  cy.get('@console.error').should('not.be.called');
+  context.afterEach();
 });

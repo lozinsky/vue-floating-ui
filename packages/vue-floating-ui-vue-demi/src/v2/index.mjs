@@ -15,7 +15,17 @@ function isElement(value) {
 }
 
 function getTeleportFirstNode(teleport) {
-  return teleport.$slots.default?.[0] ?? null;
+  const nodes = teleport.$slots.default ?? [];
+
+  if (nodes.length === 0) {
+    return null;
+  }
+
+  if (nodes.length > 1) {
+    console.warn('[Vue Floating UI]: Multiple template root elements is not supported');
+  }
+
+  return nodes[0];
 }
 
 function mountTeleportOutlet(teleport, to) {

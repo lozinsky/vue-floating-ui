@@ -15,6 +15,18 @@ function getAlias() {
   return { vue: 'vue/dist/vue.esm-bundler.js' };
 }
 
+function getExcludeSpecPattern() {
+  if (version.startsWith('2.7.')) {
+    return ['**/*.v2.cy.ts', '**/*.v3.cy.ts'];
+  }
+
+  if (version.startsWith('2.')) {
+    return ['**/*.v2.7.cy.ts', '**/*.v3.cy.ts'];
+  }
+
+  return ['**/*.v2.cy.ts', '**/*.v2.7.cy.ts'];
+}
+
 export default defineConfig({
   component: {
     devServer: {
@@ -29,6 +41,7 @@ export default defineConfig({
         plugins: [tsconfigPaths(), checker({ typescript: true })],
       },
     },
+    excludeSpecPattern: getExcludeSpecPattern(),
+    video: false,
   },
-  video: false,
 });

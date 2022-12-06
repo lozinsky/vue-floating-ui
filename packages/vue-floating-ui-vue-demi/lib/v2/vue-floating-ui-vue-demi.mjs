@@ -1,32 +1,33 @@
 import { Vue2 as s } from "vue-demi";
 export * from "vue-demi";
-const r = /* @__PURE__ */ new WeakMap();
-function d(e) {
+const o = /* @__PURE__ */ new WeakMap();
+function l(e) {
   var t;
   return (t = e == null ? void 0 : e.ownerDocument) != null ? t : document;
 }
 function a(e) {
   var t;
-  return (t = d(e).defaultView) != null ? t : window;
+  return (t = l(e).defaultView) != null ? t : window;
 }
 function f(e) {
   return e ? e instanceof a(e).Element : !1;
 }
 function u(e) {
-  var t, n;
-  return (n = (t = e.$slots.default) == null ? void 0 : t[0]) != null ? n : null;
+  var n;
+  const t = (n = e.$slots.default) != null ? n : [];
+  return t.length === 0 ? null : (t.length > 1 && console.warn("[Vue Floating UI]: Multiple template root elements is not supported"), t[0]);
 }
 function i(e, t) {
-  if (r.has(e))
+  if (o.has(e))
     return;
   const n = typeof t == "string" ? document.querySelector(t) : t;
   if (!f(n)) {
     console.warn("[Vue Floating UI]: Invalid Teleport target on mount:", n, `(${typeof n})`);
     return;
   }
-  const l = new s({
+  const d = new s({
     name: "TeleportOutlet",
-    el: n.appendChild(d(n).createElement("div")),
+    el: n.appendChild(l(n).createElement("div")),
     parent: e,
     destroyed() {
       this.$el.remove();
@@ -35,13 +36,13 @@ function i(e, t) {
       return u(this.$parent);
     }
   });
-  r.set(e, l);
+  o.set(e, d);
 }
-function o(e) {
-  r.has(e) && (r.get(e).$destroy(), r.delete(e));
+function r(e) {
+  o.has(e) && (o.get(e).$destroy(), o.delete(e));
 }
-function c(e) {
-  r.has(e) && r.get(e).$forceUpdate();
+function p(e) {
+  o.has(e) && o.get(e).$forceUpdate();
 }
 const h = s.extend({
   name: "Teleport",
@@ -50,18 +51,18 @@ const h = s.extend({
     to: {
       immediate: !0,
       handler(e) {
-        this.disabled || (o(this), i(this, e));
+        this.disabled || (r(this), i(this, e));
       }
     },
     disabled(e) {
-      e ? o(this) : this.$nextTick(() => i(this, this.to));
+      e ? r(this) : this.$nextTick(() => i(this, this.to));
     }
   },
   updated() {
-    c(this);
+    p(this);
   },
   beforeDestroy() {
-    o(this);
+    r(this);
   },
   render() {
     if (this.disabled)
