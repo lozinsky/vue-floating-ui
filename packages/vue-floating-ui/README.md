@@ -1,3 +1,7 @@
+> The contents of this repository were moved into the
+> [Floating UI](https://github.com/floating-ui/floating-ui) repository. The source code can be
+> found in [packages/vue](https://github.com/floating-ui/floating-ui/tree/master/packages/vue).
+
 # Vue Floating UI
 
 > This package is fully inspired by [`@floating-ui/react-dom`](https://floating-ui.com/docs/react-dom) and has the very similar API.
