@@ -33,7 +33,7 @@
     "vite-plugin-checker": "^0.5.1",
     "vite-tsconfig-paths": "^3.5.2",
     "vue": "^3.2.45",
-    "vue-floating-ui-vue-demi": "^0.0.0",
+    "vue-demi": "^0.13.11",
     "vue2": "npm:vue@~2.6.14",
     "vue2.7": "npm:vue@^2.7.14"
   },

@@ -1,5 +1,5 @@
 import { mount } from 'cypress/vue';
-import { isVue2 } from 'vue-floating-ui-vue-demi';
+import { isVue2 } from 'vue-demi';
 
 class Context {
   private isConsoleWarnAllowed?: boolean;

@@ -1,5 +1,5 @@
 import { defineConfig } from 'cypress';
-import { version } from 'vue-floating-ui-vue-demi';
+import { version } from 'vue-demi';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import checker from 'vite-plugin-checker';
 
